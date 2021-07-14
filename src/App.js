@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 //importing components
 import Form from './components/Form.js'
@@ -6,9 +6,32 @@ import TodoList from './components/TodoList.js'
 
 
 function App() {
+
+  //states
   const [inputText, setInputText] = useState("");
   //now you can use { inputText } it can render anywhere
   const [todos, setTodos] = useState([]);
+  //for drop down filter. all is the default status
+  const [status, setStatus] = useState("all");
+  const [filteredTodos, setFilteredTodos] = useState([]);
+    //useEffect - whenever this thing changes, do this...(run filter function
+    useEffect(() => {
+      filterHandler();
+    }, [todos, status]);
+  //funtions 
+  const filterHandler = () => {
+    switch(status){
+      case 'completed':
+        setFilteredTodos(todos.filter(todo => todo.completed === true))
+        break;
+        case 'uncompleted':
+          setFilteredTodos(todos.filter(todo => todo.completed === false))
+          break; 
+          default: 
+          setFilteredTodos(todos);
+          break;
+    }
+  }
 
   return (
     <div className="App">
@@ -20,9 +43,12 @@ function App() {
         todos={todos} 
         setTodos={setTodos} 
         setInputText={setInputText}
+        setStatus={setStatus}
         />
         <TodoList 
+        setTodos={setTodos}
         todos={todos} 
+        filteredTodos={filteredTodos}
         />
     </div>
   );
