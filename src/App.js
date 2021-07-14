@@ -14,6 +14,22 @@ function App() {
   //for drop down filter. all is the default status
   const [status, setStatus] = useState("all");
   const [filteredTodos, setFilteredTodos] = useState([]);
+
+  //useEffect to get local storage one time when app loads
+
+
+  useEffect(() => {
+    const getLocalTodos = () => {
+      if(localStorage.getItem('todos') === null) {
+        localStorage.setItem('todos', JSON.stringify([]));
+      }else{
+       let todoLocal = JSON.parse(localStorage.getItem('todos'))
+       setTodos(todoLocal)
+      }
+    };
+    getLocalTodos();
+  }, []);
+
     //useEffect - whenever this thing changes, do this...(run filter function
     useEffect(() => {
       const filterHandler = () => {
@@ -29,9 +45,19 @@ function App() {
               break;
         }
       };
+       //save to local storage 
+
+      const saveLocalTodos = () => {
+          localStorage.setItem('todos', JSON.stringify(todos));
+        
+        };
+
+      
       filterHandler();
+      saveLocalTodos();
+    
     }, [todos, status]);
- 
+
 
   return (
     <div className="App">
